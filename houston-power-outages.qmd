@@ -1,0 +1,78 @@
+---
+title: "Houston power outages from February 2021 storms"
+author: "Sam Muir"
+format: html
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+```{r}
+# load packages
+library(tidyverse)
+library(sf)
+library(stars)
+library(terra)
+library(ggspatial)
+```
+
+# Project Overview
+
+“In February 2021, the state of Texas suffered a major power crisis, which came about as a result of three severe winter storms sweeping across the United States on February 10–11, 13–17, and 15–20.”[^wiki] For more background, check out these [engineering](https://www.youtube.com/watch?v=08mwXICY4JM&ab_channel=PracticalEngineering) and [political](https://www.youtube.com/watch?v=Zcrsgdl_hP0&ab_channel=Vox) perspectives. 
+
+In this project, I am interested in estimating the number of homes in Houston that lost power as a result of the first two storm and investigating if socioeconomic factors are predictors of communities recovery from a power outage 
+
+# About the data
+
+To estimate homes that lost power I used remotely-sensed night lights data from the [Visible Infrared Imaging Radiometer Suite (VIIRS)](https://en.wikipedia.org/wiki/Visible_Infrared_Imaging_Radiometer_Suite) onboard the Suomi satellite. In particular, you will use the VNP46A1 to detect differences in night lights before and after the storm to identify areas that lost electric power. To look at specific homes and factor in roads, I also used data from [OpenStreetMap](https://www.openstreetmap.org/#map=4/38.01/-95.84). And finally, socioeconomic data was obtained from the US Census Bureau. 
+
+# Data Analysis
+
+## Night Lights
+
+Since these night light files are quite large, I am using `stars::read_stars()` to work with the raster data. Here I have two tiles for 2021-02-07 and two tiles for 2021-02-16.
+
+```{r}
+# read in night light files using read_stars()
+feb7_1 <- read_stars("data/VNP46A1/VNP46A1.A2021038.h08v05.001.2021039064328.tif")
+feb7_2 <- read_stars("data/VNP46A1/VNP46A1.A2021038.h08v06.001.2021039064329.tif")
+feb16_1 <- read_stars("data/VNP46A1/VNP46A1.A2021047.h08v05.001.2021048091106.tif")
+feb16_2 <- read_stars("data/VNP46A1/VNP46A1.A2021047.h08v06.001.2021048091105.tif")
+```
+
+The tile pairs now need to be combined to create a full image of out area of interest.  
+
+```{r}
+# combine both feb. 7th
+feb7 <- st_mosaic(feb7_1, feb7_2)
+
+# combine both feb. 16th
+feb16 <- st_mosaic(feb16_1, feb16_2)
+```
+
+Now that we have the full area we want, let's look at what the combined tiles look like. 
+
+```{r}
+plot(feb7, main = "Feb. 7, 2021") # looking at the file
+plot(feb16, main = "Feb. 16, 2021") # looking at the file
+```
+
+To find if there is a different in the night lights from before and after the storm, I found the different between the light intensity, assuming that any location that experienced a drop of more than 200 nW cm^-2^sr^-1^ experienced a power outage.  
+
+```{r include=TRUE, results='hide'}
+# finding the difference in night lights
+night_diff <- (feb7 - feb16)
+#plot(night_diff, main = "Difference in night light")
+
+# create a mask, sectioning in to 200 to infinity; the rest become NA
+night_mask <- cut(night_diff, c(200, Inf), labels = "outage")
+
+# the night mask should have one level "outage" and NA for the rest; check using:
+# unique(night_mask$VNP46A1.A2021038.h08v05.001.2021039064328.tif)
+```
+
+
+
+
+
