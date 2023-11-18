@@ -1,5 +1,6 @@
 ---
 title: "Houston power outages from February 2021 storms"
+date: "17 November 2023"
 author: "Sam Muir"
 format: html
 ---
