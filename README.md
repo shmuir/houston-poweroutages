@@ -17,7 +17,7 @@ Data was obtained from:
 
 [US Census Bureau](https://data.census.gov/)
 
-VNP46A1. [Visible Infrared Imaging Radiometer Suite (VIIRS)](https://en.wikipedia.org/wiki/Visible_Infrared_Imaging_Radiometer_Suite)
+[Visible Infrared Imaging Radiometer Suite (VIIRS)](https://en.wikipedia.org/wiki/Visible_Infrared_Imaging_Radiometer_Suite)
 
 ## File Structure
 
