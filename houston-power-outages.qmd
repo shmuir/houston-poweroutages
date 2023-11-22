@@ -26,7 +26,7 @@ In this project, I am interested in estimating the number of homes in Houston th
 
 # About the data
 
-To estimate homes that lost power I used remotely-sensed night lights data from the [Visible Infrared Imaging Radiometer Suite (VIIRS)](https://en.wikipedia.org/wiki/Visible_Infrared_Imaging_Radiometer_Suite) onboard the Suomi satellite. In particular, you will use the VNP46A1 to detect differences in night lights before and after the storm to identify areas that lost electric power. To look at specific homes and factor in roads, I also used data from [OpenStreetMap](https://www.openstreetmap.org/#map=4/38.01/-95.84). And finally, socioeconomic data was obtained from the US Census Bureau. 
+To estimate homes that lost power I used remotely-sensed night lights data from the [Visible Infrared Imaging Radiometer Suite (VIIRS)](https://en.wikipedia.org/wiki/Visible_Infrared_Imaging_Radiometer_Suite) onboard the Suomi satellite (specifically VNP46A1). To look at specific homes and factor in roads, I also used data from [OpenStreetMap](https://www.openstreetmap.org/#map=4/38.01/-95.84). And finally, socioeconomic data was obtained from the US Census Bureau. 
 
 # Data Analysis
 
