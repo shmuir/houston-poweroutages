@@ -1,6 +1,6 @@
 # Houston power outages February 2021
 
-A project for EDS223: Geospatial Analysis and Remote Sensing for the Masters of Environmental Data Science Program at UCSB.
+An assignment for EDS223: Geospatial Analysis and Remote Sensing for the Masters of Environmental Data Science Program at UCSB.
 
 The goal of the project is to gain experience working with large spatial data in R by using remotely sensed night light data, highway, housing, and income data to look at the relationship between homes in Houston, Texas that lost power during the February 2021 storms and median income census tract. Analysis steps include:
 
