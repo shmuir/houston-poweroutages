@@ -4,7 +4,7 @@ An assignment for EDS223: Geospatial Analysis and Remote Sensing for the Masters
 
 The goal of the project is to gain experience working with large spatial data in R by using remotely sensed night light data, highway, housing, and income data to look at the relationship between homes in Houston, Texas that lost power during the February 2021 storms and median income census tract. Analysis steps include:
 
-1. Reading in large .tif files with  `stars::read_stars`
+1. Reading in data files using the `stars` package
 2. Preparing the raster data for manipulation
 3. Excluding highway lights from data
 4. Estimating the number of homes that lost power
