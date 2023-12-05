@@ -19,6 +19,9 @@ Data was obtained from:
 
 [Visible Infrared Imaging Radiometer Suite (VIIRS)](https://en.wikipedia.org/wiki/Visible_Infrared_Imaging_Radiometer_Suite)
 
+## Data Access 
+Since the data files are very large they have been omitted from the repository. Data can be downloaded from [here.](https://drive.google.com/file/d/1bTk62xwOzBqWmmT791SbYbHxnCdjmBtw/view)
+
 ## File Structure
 
     houston-poweroutages
@@ -27,12 +30,12 @@ Data was obtained from:
     │   houston-power-outages.qmd    
     │
     └───data
-        |   gis_osm_roads_free_1.gpkg
-        |   gis_osm_buildings_a_free_1.gpkg
+        │   gis_osm_buildings_a_free_1.gpkg
+        │   gis_osm_roads_free_1.gpkg
+        │
+        └───ACS_2019_5YR_TRACT_48_TEXAS.gdb
+        |   │   census tract gdb files
         |
         └───VNP46A1
-        │   │   night light .tif files 
-        |
-        └───ACS_2019_5YR_TRACT_48_TEXAS.gdb
-        |   │   Texas census geometries
+        |   │   VIIRS data files
 
