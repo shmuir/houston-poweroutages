@@ -16,6 +16,9 @@ library(sf)
 library(stars)
 library(terra)
 library(ggspatial)
+library(leaflet)
+library(htmltools)
+library(leaflegend)
 ```
 
 # Project Overview
@@ -199,23 +202,73 @@ houston_border_sf <- st_transform(houston_border_sf, crs = "EPSG:3083")
 
 #creating a full df of Houston geometries
 census_houston <- census_data[houston_border_sf, ,] 
+census_houston2 <- st_transform(census_houston, "+init=epsg:4326")
 
 # making centroids to indicate which tracts had a blackout
 census_outage_map <- census_outage %>%
-  st_centroid()
+  st_centroid() %>%
+  st_transform("+init=epsg:4326")
+
 ```
 
 ```{r}
 # map of Houston census blocks colored by median income
-ggplot(census_houston) +
-  geom_sf(aes(fill = median_income)) + # color by median income
-  geom_sf(data = census_outage_map, size = 0.5, aes(color = blackout)) + # plotting centroids that indicate a blackout
-  scale_color_manual(values = c("black")) +
-  scale_fill_viridis_c(option = "G", direction = -1, na.value="grey") + # color option
-  annotation_scale() + # scale bar
-  annotation_north_arrow(style = north_arrow_fancy_orienteering, location = "br") +
-  labs(fill = "Median Income (USD)", title = "Blackouts in Houston, Texas", subtitle = "From the storms in February 2021", color = "") +
-  theme_classic()
+# ggplot(census_houston) +
+#   geom_sf(aes(fill = median_income)) + # color by median income
+#   geom_sf(data = census_outage_map, size = 0.5, aes(color = blackout)) + # plotting centroids that indicate a blackout
+#   scale_color_manual(values = c("black")) +
+#   scale_fill_viridis_c(option = "G", direction = -1, na.value="grey") + # color option
+#   annotation_scale() + # scale bar
+#   annotation_north_arrow(style = north_arrow_fancy_orienteering, location = "br") +
+#   labs(fill = "Median Income (USD)", title = "Blackouts in Houston, Texas", subtitle = "From the storms in February 2021", color = "") +
+#   theme_classic()
+```
+
+
+```{r}
+pal <- colorBin("viridis", domain = census_houston2$median_income, reverse = TRUE) # define color palette
+pal2 <- colorFactor("black", domain = census_outage_map$blackout, reverse = TRUE) # define color palette
+
+labels <- sprintf("$%g",
+  round(census_houston2$median_income, 2)) %>% 
+  lapply(htmltools::HTML)
+
+leaflet() %>%
+  addPolygons(data = census_houston2,
+    fillColor = ~pal(census_houston2$median_income), # color region by percent
+    weight = 1,
+    opacity = 1,
+    color = "black",
+    dashArray = "3",
+    fillOpacity = 1,
+   # popup = p_popup,
+    highlightOptions = highlightOptions( # when you hover over there will be pop up text
+    weight = 5,
+    color = "#666",
+    dashArray = "",
+    fillOpacity = 1,
+    bringToFront = TRUE),
+  label = labels, # label by previously defined
+  labelOptions = labelOptions(
+    style = list("font-weight" = "normal", padding = "3px 8px"),
+    textsize = "15px",
+    direction = "auto")) %>%
+  addLegend(pal = pal, # legend based on color palette
+            values = census_houston2$median_income,
+            opacity = 0.7,
+            labFormat = labelFormat(prefix = "$"), # add units
+            title = paste("Median Income ($)"), # updates with species input
+            position = "bottomright") %>%
+  addCircleMarkers(data = census_outage_map, 
+             color = "black",
+             radius = 0.25,
+             opacity = 1) %>%
+  addLegend(pal = pal2, # legend based on color palette
+            values = census_outage_map$blackout,
+            opacity = 1,
+            position = "bottomright") %>%
+  addScaleBar() %>%
+  addTiles() # basemap
 ```
 
 ```{r message=FALSE, warning=FALSE}
